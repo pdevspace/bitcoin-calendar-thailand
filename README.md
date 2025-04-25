@@ -1,0 +1,1 @@
+# bitcoin-calendar-thailand
