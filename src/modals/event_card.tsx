@@ -1,5 +1,5 @@
-// import { useState, memo, useEffect } from "react";
-import { memo } from 'react'
+'use client'
+
 import Image from 'next/image'
 import { CalendarIcon, Clock, MapPin, User } from 'lucide-react'
 import {
@@ -18,7 +18,7 @@ interface EventCardProps {
 	event: EventModel | null
 }
 
-export const EventCard = memo(({ event }: EventCardProps) => {
+export const EventCard = ({ event }: EventCardProps) => {
 	if (event == null) {
 		return null
 	}
@@ -45,7 +45,9 @@ export const EventCard = memo(({ event }: EventCardProps) => {
 							<CardDescription>Event #{event.id}</CardDescription>
 						</div>
 						<Badge variant="outline" className="bg-primary/10">
-							{event.date ? new Date(event.date).toLocaleDateString() : 'TBA'}
+							{event.start_date
+								? new Date(event.start_date).toLocaleDateString()
+								: 'TBA'}
 						</Badge>
 					</div>
 				</CardHeader>
@@ -54,8 +56,8 @@ export const EventCard = memo(({ event }: EventCardProps) => {
 						<div className="flex items-center text-sm text-muted-foreground">
 							<CalendarIcon className="mr-2 h-4 w-4" />
 							<span>
-								{event.date
-									? new Date(event.date).toLocaleDateString('en-US', {
+								{event.start_date
+									? new Date(event.start_date).toLocaleDateString('en-US', {
 											weekday: 'long',
 											year: 'numeric',
 											month: 'long',
@@ -102,6 +104,6 @@ export const EventCard = memo(({ event }: EventCardProps) => {
 			</Card>
 		</>
 	)
-})
+}
 
 EventCard.displayName = 'EventCard'

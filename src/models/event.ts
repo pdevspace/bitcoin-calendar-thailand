@@ -20,7 +20,8 @@ export interface EventModel {
 	name_en: string
 	description_th?: string
 	description_en?: string
-	date?: Date
+	start_date?: Date
+	end_date?: Date
 	url?: string
 	image_url?: string
 	register_url?: string
@@ -33,11 +34,10 @@ export interface EventModel {
 }
 
 export const getEvents = async (): Promise<EventModel[]> => {
-	console.log('Fetching events from Supabase')
 	const { data, error } = await supabase
 		.from('btc_events')
 		.select(`*`)
-		.order('date', { ascending: true })
+		.order('start_date', { ascending: true })
 
 	if (error) {
 		console.error('Error fetching events:', error)
@@ -50,7 +50,8 @@ export const getEvents = async (): Promise<EventModel[]> => {
 		name_en: event.name_en,
 		description_th: event.description_th || '',
 		description_en: event.description_en || '',
-		date: event.date ? new Date(event.date) : undefined,
+		start_date: event.start_date ? new Date(event.start_date) : undefined,
+		end_date: event.end_date ? new Date(event.end_date) : undefined,
 		url: event.url || '',
 		image_url: event.image_url || '',
 		register_url: event.register_url || '',
@@ -64,7 +65,6 @@ export const getEvents = async (): Promise<EventModel[]> => {
 }
 
 export const getEventById = async (id: string): Promise<{ event: EventModel | null }> => {
-	console.log(`Fetching event with ID: ${id}`)
 	const { data: eventData, error: eventError } = await supabase
 		.from('btc_events')
 		.select('*')
@@ -79,10 +79,8 @@ export const getEventById = async (id: string): Promise<{ event: EventModel | nu
 	const { data: eventDetailsData, error: eventDetailsError } = await supabase
 		.from('btc_event_details')
 		.select(
-			`
-            *,
-            location:btc_locations(*)
-        `,
+			`*,
+            location:btc_locations(*)`,
 		)
 		.eq('event_id', id)
 
@@ -112,7 +110,8 @@ export const getEventById = async (id: string): Promise<{ event: EventModel | nu
 		name_en: eventData.name_en,
 		description_th: eventData.description_th || '',
 		description_en: eventData.description_en || '',
-		date: eventData.date ? new Date(eventData.date) : undefined,
+		start_date: eventData.start_date ? new Date(eventData.start_date) : undefined,
+		end_date: eventData.end_date ? new Date(eventData.end_date) : undefined,
 		url: eventData.url || '',
 		image_url: eventData.image_url || '',
 		register_url: eventData.register_url || '',
